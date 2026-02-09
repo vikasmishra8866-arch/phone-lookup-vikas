@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import io
 
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Vikas Mishra | API Scanner", page_icon="📱", layout="centered")
@@ -31,10 +30,6 @@ st.markdown("""
         66% { border-color: #0000ff; box-shadow: 0 0 10px #0000ff; color: #0000ff; }
         100% { border-color: #ff0000; box-shadow: 0 0 10px #ff0000; color: #ff0000; }
     }
-    /* YELLOW LABELS */
-    div[data-testid="stRadio"] label {
-        color: #FFFF00 !important; font-size: 20px !important; font-weight: bold;
-    }
     /* RED TEXT INPUT */
     .stTextInput input {
         color: #FF0000 !important; font-size: 24px !important; font-weight: 900 !important;
@@ -61,14 +56,44 @@ st.markdown('<div class="rgb-container">⚙️ SCANNING MODE</div>', unsafe_allo
 mode = st.radio("", ["Standard Lookup", "Advanced API Debug"], horizontal=True, label_visibility="collapsed")
 
 st.markdown('<div class="rgb-container">📱 TARGET MOBILE NUMBER</div>', unsafe_allow_html=True)
-phone_number = st.text_input("", placeholder="Enter 10 Digit No.", max_chars=10, label_visibility="collapsed").strip()
+phone_number = st.text_input("", placeholder="Enter 10 Digit No.", max_chars=10, key="phone_input", label_visibility="collapsed").strip()
 
 if st.button("🚀 EXECUTE SEARCH ENGINE"):
     if len(phone_number) == 10 and phone_number.isdigit():
         with st.spinner("🛰️ Connecting to Satellite Database..."):
             try:
-                # API Details from your anish.py
+                # API Link from your anish.py
                 KEY = "demo-testing"
                 API_URL = f"https://anishexploits.site/anish-exploits/api.php?key={KEY}&num={phone_number}"
                 
-                response = requests.get(
+                # FIXED: Line 74 bracket issue resolved
+                response = requests.get(API_URL, timeout=20)
+                data = response.json()
+
+                if data.get("success") is True and data.get("result"):
+                    res = data["result"][0]
+                    st.balloons()
+                    st.markdown(f"""
+                    <div class="result-card">
+                        <h3 style="color:#00FF00;">✅ DATA FOUND</h3>
+                        <p>👤 <b>Name:</b> {res.get('name', 'N/A')}</p>
+                        <p>👨‍🦳 <b>Father:</b> {res.get('father_name', 'N/A')}</p>
+                        <p>🏠 <b>Address:</b> {res.get('address', 'N/A')}</p>
+                        <p>📍 <b>Circle:</b> {res.get('circle', 'N/A')}</p>
+                        <p>🆔 <b>ID Number:</b> {res.get('id_number', 'N/A')}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.error("❌ No Information Found in Database.")
+                    if mode == "Advanced API Debug":
+                        st.info("🔍 Technical Debug Info:")
+                        st.json(data)
+
+            except Exception as e:
+                st.error("📡 API Server Not Responding.")
+                if mode == "Advanced API Debug":
+                    st.write(f"Error Detail: {e}")
+    else:
+        st.warning("⚠️ Enter a valid 10-digit number.")
+
+st.markdown("<br><center style='color:#777; font-size:12px;'>VIKAS MISHRA PRIVATE SUITE © 2026</center>", unsafe_allow_html=True)

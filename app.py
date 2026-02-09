@@ -20,6 +20,25 @@ st.markdown("""
     
     /* ADMIN SECTION STYLE */
     .admin-box { background: rgba(212, 175, 55, 0.1); padding: 10px; border-radius: 10px; border: 1px dashed #d4af37; margin-bottom: 20px; }
+
+    /* 🔥 PINK BUTTON STYLE 🔥 */
+    div.stButton > button:first-child {
+        background: linear-gradient(90deg, #FF1493 0%, #FF69B4 100%) !important;
+        color: white !important;
+        border: none !important;
+        font-weight: 900 !important;
+        font-size: 20px !important;
+        border-radius: 12px !important;
+        padding: 10px 0 !important;
+        width: 100% !important;
+        box-shadow: 0 0 15px rgba(255, 20, 147, 0.6) !important;
+        text-transform: uppercase;
+        transition: 0.3s;
+    }
+    div.stButton > button:hover {
+        box-shadow: 0 0 25px rgba(255, 20, 147, 0.9) !important;
+        transform: scale(1.02);
+    }
     </style>
     """, unsafe_allow_html=True)
 

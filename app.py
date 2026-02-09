@@ -1,11 +1,11 @@
 import streamlit as st
 import requests
-import time
+import io
 
 # --- PAGE CONFIG ---
-st.set_page_config(page_title="Vikas Mishra | Phone Lookup", page_icon="📱", layout="centered")
+st.set_page_config(page_title="Vikas Mishra | API Scanner", page_icon="📱", layout="centered")
 
-# --- CUSTOM CSS (Aapka Signature Style) ---
+# --- CUSTOM CSS ---
 st.markdown("""
     <style>
     .stApp {
@@ -31,16 +31,19 @@ st.markdown("""
         66% { border-color: #0000ff; box-shadow: 0 0 10px #0000ff; color: #0000ff; }
         100% { border-color: #ff0000; box-shadow: 0 0 10px #ff0000; color: #ff0000; }
     }
-    /* RED TEXT IN INPUT BOX */
+    /* YELLOW LABELS */
+    div[data-testid="stRadio"] label {
+        color: #FFFF00 !important; font-size: 20px !important; font-weight: bold;
+    }
+    /* RED TEXT INPUT */
     .stTextInput input {
-        color: #FF0000 !important; font-size: 22px !important; font-weight: 900 !important;
+        color: #FF0000 !important; font-size: 24px !important; font-weight: 900 !important;
         background-color: rgba(255, 255, 255, 0.1) !important;
         border: 2px solid #FF0000 !important; text-align: center;
     }
-    /* RESULT BOX */
     .result-card {
-        background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px;
-        border-left: 5px solid #d4af37; margin-top: 20px;
+        background: rgba(0, 255, 0, 0.05); padding: 20px; border-radius: 15px;
+        border: 1px solid #00FF00; margin-top: 20px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -48,43 +51,24 @@ st.markdown("""
 # --- HEADER ---
 st.markdown("""
     <div class="header-box">
-        <p class="main-title">SATELLITE PHONE LOOKUP</p>
-        <p style="color: #ffffff; font-size: 14px;">💎 Powered by API | Managed by: <span style="color: #d4af37;">VIKAS MISHRA</span></p>
+        <p class="main-title">ULTRA PHONE LOOKUP</p>
+        <p style="color: #ffffff; font-size: 14px;">Managed by: <span style="color: #d4af37; font-weight:bold;">VIKAS MISHRA</span></p>
     </div>
     """, unsafe_allow_html=True)
 
-# --- MAIN INTERFACE ---
-st.markdown('<div class="rgb-container">📡 ENTER TARGET MOBILE NUMBER</div>', unsafe_allow_html=True)
-phone_number = st.text_input("", placeholder="Enter 10 Digit No.", max_chars=10, label_visibility="collapsed")
+# --- UI ---
+st.markdown('<div class="rgb-container">⚙️ SCANNING MODE</div>', unsafe_allow_html=True)
+mode = st.radio("", ["Standard Lookup", "Advanced API Debug"], horizontal=True, label_visibility="collapsed")
+
+st.markdown('<div class="rgb-container">📱 TARGET MOBILE NUMBER</div>', unsafe_allow_html=True)
+phone_number = st.text_input("", placeholder="Enter 10 Digit No.", max_chars=10, label_visibility="collapsed").strip()
 
 if st.button("🚀 EXECUTE SEARCH ENGINE"):
     if len(phone_number) == 10 and phone_number.isdigit():
-        with st.spinner("🛰️ Scanning Database via Satellite..."):
+        with st.spinner("🛰️ Connecting to Satellite Database..."):
             try:
-                # API Call
-                API_URL = f"https://anishexploits.site/anish-exploits/api.php?key=demo-testing&num={phone_number}"
-                response = requests.get(API_URL, timeout=30)
-                data = response.json()
-
-                if data.get("success") and data.get("result"):
-                    res = data["result"][0]
-                    st.balloons()
-                    
-                    st.markdown(f"""
-                    <div class="result-card">
-                        <h3 style="color:#d4af37;">✅ Information Found</h3>
-                        <p>👤 <b>Name:</b> {res.get('name', 'N/A')}</p>
-                        <p>👨‍🦳 <b>Father:</b> {res.get('father_name', 'N/A')}</p>
-                        <p>🏠 <b>Address:</b> {res.get('address', 'N/A')}</p>
-                        <p>📍 <b>Circle:</b> {res.get('circle', 'N/A')}</p>
-                        <p>🆔 <b>ID Number:</b> {res.get('id_number', 'N/A')}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                else:
-                    st.error("❌ No Data Found for this number.")
-            except Exception as e:
-                st.error(f"📡 Connection Error: API is not responding.")
-    else:
-        st.warning("⚠️ Please enter a valid 10-digit number.")
-
-st.markdown("<br><center style='color:#777; font-size:12px;'>VIKAS MISHRA PRIVATE SUITE © 2026</center>", unsafe_allow_html=True)
+                # API Details from your anish.py
+                KEY = "demo-testing"
+                API_URL = f"https://anishexploits.site/anish-exploits/api.php?key={KEY}&num={phone_number}"
+                
+                response = requests.get(
